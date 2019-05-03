@@ -1,4 +1,5 @@
 var express = require("express");
+// import express from 'express'
 var bodyParser = require("body-parser");
 var app = express();
 var router = require("./router/index");
