@@ -9,7 +9,7 @@ git push -u origin master
 ```
 
 ### …or push an existing repository from the command line
-```shll
+```bash
 git remote add origin https://github.com/fwd001/todolistServe.git
 git push -u origin master
 ```
