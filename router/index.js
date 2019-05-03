@@ -59,13 +59,13 @@ router.get(`${routeName}/getList`, function(req, res) {
 			v =>
 				v.id.includes(id) &&
 				v.name.includes(name) &&
-				v.age.includes(age) &&
+				(v.age === age || !age) &&
 				v.english.includes(english)
 		)
-		const _list = arr.slice((page - 1) * pageSize, pageSize - 1)
-		console.log(_list)
+		const _list = arr.slice(page * (pageSize + 1), (page + 1) * (pageSize + 1))
+		console.log(page * (pageSize + 1), pageSize + 1)
 		const data = {
-			total: u.length,
+			total: arr.length,
 			page: payload.page,
 			pageSize: payload.pageSize,
 			list: _list
