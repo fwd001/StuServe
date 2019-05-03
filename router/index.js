@@ -2,6 +2,9 @@ var router = require('express').Router()
 var db = require('../db')
 var { resSuc, resErr } = require('../tool')
 const routeName = '/api'
+
+const regPos = /^\d+(\.\d+)?$/ //非负浮点数
+
 // 注册
 router.post(`${routeName}/register`, function(req, res) {
 	var payload = req.body
@@ -30,14 +33,13 @@ router.post(`${routeName}/login`, function(req, res) {
 // 新增
 router.post(`${routeName}/add`, function(req, res) {
 	var payload = req.body
-	var regPos = /^\d+(\.\d+)?$/ //非负浮点数
 	if (!payload.id) return res.send(resErr('学号为必填项'))
 	if (!payload.name) return res.send(resErr('姓名为必填项'))
 	if (!payload.chinese) return res.send(resErr('语文成绩为必填项'))
 	if (!payload.english) return res.send(resErr('英语成绩为必填项'))
 	if (!payload.mathematics) return res.send(resErr('数学成绩为必填项'))
-	if (!payload.age) payload.age = 0
 	if (!regPos.test(payload.id + '')) return res.send(resErr('学号只能为数字'))
+	if (!payload.age) payload.age = 0
 	db.queryStu(payload, u => {
 		if (u) return res.send(resErr('学号已存在'))
 		db.add(payload, () => res.send(resSuc('新增成功')))
@@ -70,6 +72,30 @@ router.get(`${routeName}/getList`, function(req, res) {
 		}
 		res.send(resSuc('获取成功', data))
 		// db.add(payload, () => res.send(resSuc('新增成功')))
+	})
+})
+
+// 删除
+router.get(`${routeName}/del`, function (req, res) {
+	var payload = JSON.parse(req.query.body)
+	if (!payload._id) return res.send(resErr('_id为必填项'))
+	db.del(payload, () => {
+		res.send(resSuc('删除成功'))
+	})
+})
+
+// 编辑更新
+router.post(`${routeName}/edit`, function (req, res) {
+	var payload = req.body
+	console.log(payload);
+	if (!payload._id) return res.send(resErr('_id为必填项'))
+	if (!payload.name) return res.send(resErr('姓名为必填项'))
+	if (!payload.chinese) return res.send(resErr('语文成绩为必填项'))
+	if (!payload.english) return res.send(resErr('英语成绩为必填项'))
+	if (!payload.mathematics) return res.send(resErr('数学成绩为必填项'))
+	if (!payload.age) payload.age = 0
+	db.edit(payload, () => {
+		res.send(resSuc('编辑成功'))
 	})
 })
 
