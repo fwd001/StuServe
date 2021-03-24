@@ -48,7 +48,7 @@ router.post(`${routeName}/add`, function(req, res) {
 
 // 查询
 router.get(`${routeName}/getList`, function(req, res) {
-	var payload = JSON.parse(req.query.body)
+	var payload = req.query
 	if (!payload.page) return res.send(resErr('page为必填项'))
 	if (!payload.pageSize) return res.send(resErr('pageSize为必填项'))
 	if (!regPos.test(payload.pageSize + '') && !regPos.test(payload.page + '')) return res.send(resErr('page，pageSize只能为数字'))
@@ -58,10 +58,13 @@ router.get(`${routeName}/getList`, function(req, res) {
 		const { id = '', name = '', age = '', english = '' } = payload
 		const arr = u.filter(
 			v =>
-				v.id.includes(id) &&
-				v.name.includes(name) &&
-				(v.age === age || !age) &&
-				v.english.includes(english)
+				{ 	
+					console.log(v);
+					return `${v.id}`.includes(id) &&
+					v.name.includes(name) &&
+					(v.age === age || !age) &&
+					v.english.includes(english)
+				}
 		)
 		const _list = arr.slice(page * (pageSize + 1), (page + 1) * (pageSize + 1))
 		console.log(page * (pageSize + 1), pageSize + 1)
