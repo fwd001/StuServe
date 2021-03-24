@@ -51,6 +51,7 @@ router.get(`${routeName}/getList`, function(req, res) {
 	var payload = JSON.parse(req.query.body)
 	if (!payload.page) return res.send(resErr('page为必填项'))
 	if (!payload.pageSize) return res.send(resErr('pageSize为必填项'))
+	if (!regPos.test(payload.pageSize + '') && !regPos.test(payload.page + '')) return res.send(resErr('page，pageSize只能为数字'))
 	const page = payload.page - 1
 	const pageSize = payload.pageSize - 1
 	db.get(payload, u => {
@@ -77,6 +78,7 @@ router.get(`${routeName}/getList`, function(req, res) {
 
 // 删除
 router.get(`${routeName}/del`, function (req, res) {
+	console.log(req.query.body);
 	var payload = JSON.parse(req.query.body)
 	if (!payload._id) return res.send(resErr('_id为必填项'))
 	db.del(payload, () => {
